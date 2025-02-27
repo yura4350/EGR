@@ -3,7 +3,7 @@ import random
 
 def update_heart_rate():
     heart_rate = random.randint(60, 100)  # Simulating heart rate in bpm
-    heart_rate_label.config(text=f"Your Heart Rate: {heart_rate} bpm")
+    heart_rate_label.config(text=f"Your current Heart Rate: {heart_rate} bpm")
     root.after(1000, update_heart_rate)  # Update every second
 
 root = tk.Tk()
