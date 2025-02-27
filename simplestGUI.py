@@ -38,7 +38,7 @@ class HeartRateMonitor:
         self.top_frame.pack(fill="x", padx=20, pady=(20, 0))
         
         # Add title label
-        self.title_label = ctk.CTkLabel(self.top_frame, text="Heart Rate Activity Monitor", 
+        self.title_label = ctk.CTkLabel(self.top_frame, text="Heart Rate Monitor", 
                                         font=ctk.CTkFont(size=36, weight="bold"))
         self.title_label.pack(pady=(20, 30))
         
@@ -67,7 +67,7 @@ class HeartRateMonitor:
         self.avg_frame = ctk.CTkFrame(self.frame)
         self.avg_frame.pack(pady=20, fill="x", padx=50)
         
-        self.avg_title = ctk.CTkLabel(self.avg_frame, text="Activity Comparison", 
+        self.avg_title = ctk.CTkLabel(self.avg_frame, text="Mindfullness Exercises Effectiveness", 
                                      font=ctk.CTkFont(size=24, weight="bold"))
         self.avg_title.pack(pady=(20, 20))
         
@@ -75,8 +75,8 @@ class HeartRateMonitor:
         self.grid_frame = ctk.CTkFrame(self.avg_frame, fg_color="transparent")
         self.grid_frame.pack(pady=(0, 20), fill="x")
         
-        # Before Activity column
-        self.before_label = ctk.CTkLabel(self.grid_frame, text="BEFORE ACTIVITY", 
+        # Before Mindfullness Exercises column
+        self.before_label = ctk.CTkLabel(self.grid_frame, text="BEFORE EXERCISE", 
                                         font=ctk.CTkFont(size=18, weight="bold"))
         self.before_label.grid(row=0, column=0, padx=40, pady=10)
         
@@ -101,8 +101,8 @@ class HeartRateMonitor:
                                          font=ctk.CTkFont(size=16))
         self.diff_bpm_label.grid(row=2, column=1, padx=40, pady=5)
         
-        # After Activity column
-        self.after_label = ctk.CTkLabel(self.grid_frame, text="AFTER ACTIVITY", 
+        # After Mindfullness Exercises column
+        self.after_label = ctk.CTkLabel(self.grid_frame, text="AFTER EXERCISE", 
                                        font=ctk.CTkFont(size=18, weight="bold"))
         self.after_label.grid(row=0, column=2, padx=40, pady=10)
         
@@ -129,7 +129,7 @@ class HeartRateMonitor:
         self.button_frame.pack(pady=30, fill="x")
         
         # Start measuring button
-        self.measure_button = ctk.CTkButton(self.button_frame, text="Start Before Activity Measurement", 
+        self.measure_button = ctk.CTkButton(self.button_frame, text="Start Pre-exercise Measurement", 
                                            command=self.start_next_phase,
                                            font=ctk.CTkFont(size=20),
                                            width=400, height=70,
@@ -164,18 +164,18 @@ class HeartRateMonitor:
         
     def start_next_phase(self):
         if self.current_phase == "ready":
-            # Start the "before activity" measurement
+            # Start the "before mindfullness exercises" measurement
             self.current_phase = "before"
-            self.start_measurement("Before Activity")
-            self.measure_button.configure(text="Measuring Before Activity...", state="disabled")
-            self.status_label.configure(text="Measuring resting heart rate before activity...")
+            self.start_measurement("Before Mindfullness Exercises")
+            self.measure_button.configure(text="Measuring Heart Rate Before Mindfullness Exercises...", state="disabled")
+            self.status_label.configure(text="Measuring resting heart rate before mindfullness exercises...")
             
         elif self.current_phase == "between":
-            # Start the "after activity" measurement
+            # Start the "after mindfullness exercises" measurement
             self.current_phase = "after"
-            self.start_measurement("After Activity")
-            self.measure_button.configure(text="Measuring After Activity...", state="disabled")
-            self.status_label.configure(text="Measuring heart rate after activity...")
+            self.start_measurement("After Mindfullness Exercises")
+            self.measure_button.configure(text="Measuring Heart Rate After Mindfullness Exercises...", state="disabled")
+            self.status_label.configure(text="Measuring heart rate after mindfullness exercises...")
             
     def start_measurement(self, phase_name):
         # Reset readings for this phase
@@ -197,7 +197,7 @@ class HeartRateMonitor:
             
             # Simulating heart rate in bpm - in a real application, this would come from a sensor
             if self.current_phase == "after":
-                # Simulate slightly elevated heart rate after activity
+                # Simulate slightly elevated heart rate after mindfullness exercises
                 self.current_heart_rate = random.randint(75, 115)
             else:
                 self.current_heart_rate = random.randint(60, 100)
@@ -241,11 +241,11 @@ class HeartRateMonitor:
             
             # Move to "between" phase
             self.current_phase = "between"
-            self.measure_button.configure(text="Start After Activity Measurement", 
+            self.measure_button.configure(text="Start After-exercise Measurement", 
                                        state="normal", 
                                        fg_color="#007bff", 
                                        hover_color="#0069d9")
-            self.status_label.configure(text="Now perform your activity, then click the button to measure your heart rate again.")
+            self.status_label.configure(text="Now perform your mindfullness exercise, then click the button to measure your heart rate again.")
             
         elif self.current_phase == "after":
             self.after_activity_avg = avg_heart_rate
@@ -289,7 +289,7 @@ class HeartRateMonitor:
         self.timer_label.configure(text="Time Remaining: --")
         
         # Reset button and status
-        self.measure_button.configure(text="Start Before Activity Measurement", 
+        self.measure_button.configure(text="Start Before Mindfullness Exercise Measurement", 
                                     state="normal", 
                                     fg_color="#28a745", 
                                     hover_color="#218838")
