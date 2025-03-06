@@ -15,7 +15,7 @@ class HeartRateMonitor:
         self.root.title("Heart Rate Monitor")
         
         # Make the window fullscreen
-        self.root.attributes('-fullscreen', True)
+        self.root.after(1000, lambda: self.root.wm_attributes('-fullscreen', 'true'))
         
         # Variables for heart rate tracking
         self.is_measuring = False
