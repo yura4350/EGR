@@ -22,7 +22,7 @@ class HeartRateMonitor:
         self.current_heart_rate = 0
         self.heart_rate_readings = []
         self.measuring_start_time = 0
-        self.measuring_duration = 30  # 30 seconds for average calculation
+        self.measuring_duration = 15  # 30 seconds for average calculation
         
         # Variables for activity comparison
         self.before_activity_avg = None
@@ -198,9 +198,9 @@ class HeartRateMonitor:
             # Simulating heart rate in bpm - in a real application, this would come from a sensor
             if self.current_phase == "after":
                 # Simulate slightly elevated heart rate after mindfullness exercises
-                self.current_heart_rate = random.randint(75, 115)
-            else:
                 self.current_heart_rate = random.randint(60, 100)
+            else:
+                self.current_heart_rate = random.randint(75, 115)
             
             # Add reading to our list
             self.heart_rate_readings.append(self.current_heart_rate)
