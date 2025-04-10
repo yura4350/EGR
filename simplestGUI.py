@@ -2,10 +2,15 @@ import tkinter as tk
 import random
 import customtkinter as ctk
 import time
+import pygame
 from datetime import datetime
 
 class HeartRateMonitor:
     def __init__(self):
+
+        #initiating pygame mixer
+        pygame.mixer.init()
+
         # Set appearance mode and default theme
         ctk.set_appearance_mode("System")
         ctk.set_default_color_theme("blue")
@@ -147,7 +152,17 @@ class HeartRateMonitor:
                                          width=200, height=70,
                                          fg_color="#6c757d", hover_color="#5a6268")
         self.reset_button.pack(side="left", padx=20)
+
+        # Music button
+        # Play Music button
+        self.music_button = ctk.CTkButton(self.bottom_buttons, text="Play Music",
+                                          command=self.play_music,
+                                          font=ctk.CTkFont(size=20),
+                                          width=200, height=70,
+                                          fg_color="#17a2b8", hover_color="#138496")
         
+        self.music_button.pack(side="left", padx=20)
+
         # Exit button
         self.exit_button = ctk.CTkButton(self.bottom_buttons, text="Exit", 
                                         command=self.exit_application,
@@ -162,6 +177,38 @@ class HeartRateMonitor:
         # Timer ID for updating
         self.update_timer = None
         
+    def play_music(self):
+        try:
+            pygame.mixer.music.load("Frank Ocean - Miss You So.mp3")
+            pygame.mixer.music.set_volume(1.0)
+            pygame.mixer.music.play()
+            self.status_label.configure(text="Playing music: Frank Ocean - Miss You So 🎵")
+        except Exception as e:
+            self.status_label.configure(text=f"Error playing music: {e}")
+    
+    def show_music_window(self):
+        music_window = ctk.CTkToplevel(self.root)
+        music_window.title("Mindfulness Music")
+        music_window.geometry("400x200")
+        music_window.grab_set()
+
+        label = ctk.CTkLabel(music_window, text="Click below to play calming music",
+                            font=ctk.CTkFont(size=18))
+        label.pack(pady=20)
+
+        play_button = ctk.CTkButton(music_window, text="Play Music",
+                                    command=self.play_music,
+                                    font=ctk.CTkFont(size=20),
+                                    fg_color="#17a2b8", hover_color="#138496")
+        play_button.pack(pady=10)
+
+        # Optional: Close button
+        close_button = ctk.CTkButton(music_window, text="Close",
+                                    command=music_window.destroy,
+                                    font=ctk.CTkFont(size=16),
+                                    fg_color="#6c757d", hover_color="#5a6268")
+        close_button.pack(pady=10)
+
     def start_next_phase(self):
         if self.current_phase == "ready":
             # Start the "before mindfullness exercises" measurement
@@ -227,46 +274,44 @@ class HeartRateMonitor:
     
     def complete_measurement(self):
         self.is_measuring = False
-        
-        # Calculate average
+
         if len(self.heart_rate_readings) > 0:
             avg_heart_rate = sum(self.heart_rate_readings) / len(self.heart_rate_readings)
         else:
             avg_heart_rate = 0
-            
-        # Update the appropriate average display
+
         if self.current_phase == "before":
             self.before_activity_avg = avg_heart_rate
             self.before_avg_value.configure(text=f"{int(avg_heart_rate)}")
-            
+
             # Move to "between" phase
             self.current_phase = "between"
-            self.measure_button.configure(text="Start After-exercise Measurement", 
-                                       state="normal", 
-                                       fg_color="#007bff", 
-                                       hover_color="#0069d9")
-            self.status_label.configure(text="Now perform your mindfullness exercise, then click the button to measure your heart rate again.")
-            
+            self.status_label.configure(text="Now perform your mindfulness exercise. Play music if desired.")
+            self.measure_button.configure(text="Start After-exercise Measurement",
+                                        state="normal",
+                                        fg_color="#007bff",
+                                        hover_color="#0069d9")
+
+            self.show_music_window()
+
         elif self.current_phase == "after":
             self.after_activity_avg = avg_heart_rate
             self.after_avg_value.configure(text=f"{int(avg_heart_rate)}")
-            
-            # Calculate and display difference
+
             diff = int(self.after_activity_avg - self.before_activity_avg)
             self.diff_value.configure(text=f"{'+' if diff > 0 else ''}{diff}")
-            
-            # Color code the difference
+
             if diff > 0:
-                self.diff_value.configure(text_color="#dc3545")  # red for increase
+                self.diff_value.configure(text_color="#dc3545")
             elif diff < 0:
-                self.diff_value.configure(text_color="#28a745")  # green for decrease
+                self.diff_value.configure(text_color="#28a745")
             else:
-                self.diff_value.configure(text_color=("gray10", "gray90"))  # default for no change
-            
-            # Move to "completed" phase
+                self.diff_value.configure(text_color=("gray10", "gray90"))
+
             self.current_phase = "completed"
             self.measure_button.configure(text="Measurement Complete", state="disabled")
             self.status_label.configure(text="Measurement complete! Press 'Reset All' to start a new comparison.")
+
     
     def reset_monitor(self):
         # Cancel any pending updates
