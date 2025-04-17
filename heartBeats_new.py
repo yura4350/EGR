@@ -24,9 +24,10 @@ class PulseSensorReader(threading.Thread):
         self.firstBeat = True
         self.secondBeat = False
         self.Pulse = False
-        self.IBI = 600
+        self.IBI = 600 #potentially change IBI to adjust for normal heart rate
         self.rate_buf = deque(maxlen=buffer_size)
         self.bpm = 0
+        #self.amp = 100
 
         self._running = True
 
@@ -74,8 +75,8 @@ class PulseSensorReader(threading.Thread):
             # reset after no beat found
             if signal < self.thresh and self.Pulse:
                 self.Pulse = False
-                amp = self.P - self.T
-                self.thresh = amp / 2 + self.T
+                self.amp = self.P - self.T
+                self.thresh = self.amp / 2 + self.T
                 self.P = self.thresh
                 self.T = self.thresh
 

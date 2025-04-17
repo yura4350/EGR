@@ -23,7 +23,7 @@ class HeartRateMonitor:
         # Create the main window
         self.root = ctk.CTk()
         self.root.title("Heart Rate Monitor")
-        self.root.after(1000, lambda: self.root.wm_attributes('-fullscreen', 'true'))
+        #self.root.after(1000, lambda: self.root.wm_attributes('-fullscreen', 'true'))
         
         # Variables for heart rate tracking
         self.is_measuring = False
@@ -193,7 +193,7 @@ class HeartRateMonitor:
             self.timer_label.configure(text=f"Time Remaining: {int(remaining_time)} sec")
             
             # Simulated heart rate: slightly lower range after exercise if in after phase.
-            bpm = int(self.sensor.bpm)
+            self.current_heart_rate = int(self.sensor.bpm)
             
             self.heart_rate_readings.append(self.current_heart_rate)
             self.heart_rate_value.configure(text=f"{self.current_heart_rate}")
