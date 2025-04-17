@@ -11,7 +11,7 @@ class PulseSensorReader(threading.Thread):
     """
     def __init__(self, channel=0, gain=2/3, buffer_size=10):
         super().__init__(daemon=True)
-        self.adc = Adafruit_ADS1x15.ADS1015()
+        self.adc = Adafruit_ADS1x15.ADS1015(busnum=1)
         self.channel = channel
         self.gain = gain
 
