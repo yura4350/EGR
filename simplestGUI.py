@@ -1,11 +1,18 @@
 import tkinter as tk
+import time
 import random
 import customtkinter as ctk
 import time
 import pygame
+import threading
+from heartBeats import PulseSensorReader
 
 class HeartRateMonitor:
     def __init__(self):
+        # start sensor thread
+        self.sensor = PulseSensorReader(channel=0, gain=2/3, buffer_size=10)
+        self.sensor.start()
+
         # Initiate pygame mixer
         pygame.mixer.init()
 
@@ -186,10 +193,7 @@ class HeartRateMonitor:
             self.timer_label.configure(text=f"Time Remaining: {int(remaining_time)} sec")
             
             # Simulated heart rate: slightly lower range after exercise if in after phase.
-            if self.current_phase == "after":
-                self.current_heart_rate = random.randint(60, 100)
-            else:
-                self.current_heart_rate = random.randint(75, 115)
+            bpm = int(self.sensor.bpm)
             
             self.heart_rate_readings.append(self.current_heart_rate)
             self.heart_rate_value.configure(text=f"{self.current_heart_rate}")
