@@ -34,7 +34,7 @@ class HeartRateMonitor:
         # "before"    : Currently doing pre-exercise measurement.
         # "between"   : Pre-exercise complete; waiting for music to be played.
         # "after"     : Ready for post-exercise measurement.
-        # "completed" : All measurements complete.
+        # "completed" : Post-exercise measurement complete.
         self.current_phase = "ready"
         
         # Build the interface
@@ -128,7 +128,7 @@ class HeartRateMonitor:
         self.button_frame = ctk.CTkFrame(self.frame, fg_color="transparent")
         self.button_frame.pack(pady=30, fill="x")
         
-        # Single main button which changes function based on phase
+        # Single main button that changes function based on phase
         self.measure_button = ctk.CTkButton(self.button_frame, 
                                             text="Start Pre-exercise Measurement",
                                             command=self.start_next_phase,
@@ -185,7 +185,7 @@ class HeartRateMonitor:
             remaining_time = max(0, self.measuring_duration - elapsed_time)
             self.timer_label.configure(text=f"Time Remaining: {int(remaining_time)} sec")
             
-            # Simulated heart rate: lower range after exercise if in after phase.
+            # Simulated heart rate: slightly lower range after exercise if in after phase.
             if self.current_phase == "after":
                 self.current_heart_rate = random.randint(60, 100)
             else:
@@ -216,14 +216,14 @@ class HeartRateMonitor:
             avg_heart_rate = 0
 
         if self.current_phase == "before":
-            # Save pre-exercise average and update the state.
+            # Save pre-exercise average and update state.
             self.before_activity_avg = avg_heart_rate
             self.before_avg_value.configure(text=f"{int(avg_heart_rate)}")
             self.current_phase = "between"
             self.status_label.configure(text="Pre-exercise measurement complete. Click the button to play calming music.")
             self.measure_button.configure(text="Play Music", state="normal", fg_color="#17a2b8", hover_color="#138496")
         elif self.current_phase == "after":
-            # Save post-exercise average and show the difference.
+            # Save post-exercise average and display the difference.
             self.after_activity_avg = avg_heart_rate
             self.after_avg_value.configure(text=f"{int(avg_heart_rate)}")
             diff = int(self.after_activity_avg - self.before_activity_avg)
@@ -234,9 +234,11 @@ class HeartRateMonitor:
                 self.diff_value.configure(text_color="#28a745")
             else:
                 self.diff_value.configure(text_color=("gray10", "gray90"))
+            # Replace the main button with a Reset button for convenience.
             self.current_phase = "completed"
-            self.measure_button.configure(text="Measurement Complete", state="disabled")
-            self.status_label.configure(text="Post-exercise measurement complete! Press 'Reset All' to start again.")
+            self.status_label.configure(text="Post-exercise measurement complete! Click the Reset button to start again.")
+            self.measure_button.configure(text="Reset", state="normal", command=self.reset_monitor,
+                                          fg_color="#6c757d", hover_color="#5a6268")
 
     def play_music_and_wait(self):
         try:
@@ -245,19 +247,19 @@ class HeartRateMonitor:
             pygame.mixer.music.play()
             self.status_label.configure(text="Playing calming music...")
             self.measure_button.configure(state="disabled")
-            self.check_music_status()  # Start checking if music is finished.
+            self.check_music_status()  # Start checking for when music finishes.
         except Exception as e:
             self.status_label.configure(text=f"Error playing music: {e}")
 
     def check_music_status(self):
         if pygame.mixer.music.get_busy():
-            # Check again in 1 second
             self.root.after(1000, self.check_music_status)
         else:
-            # Music has finished; change state to "after" and update button.
+            # Music has finished; update button for post-exercise measurement.
             self.current_phase = "after"
             self.status_label.configure(text="Music finished. Click the button to start post-exercise measurement.")
             self.measure_button.configure(text="Start Post-exercise Measurement", state="normal",
+                                          command=self.start_next_phase,
                                           fg_color="#28a745", hover_color="#218838")
 
     def reset_monitor(self):
@@ -277,7 +279,7 @@ class HeartRateMonitor:
         self.diff_value.configure(text="--", text_color=("gray10", "gray90"))
         self.timer_label.configure(text="Time Remaining: --")
         self.measure_button.configure(text="Start Pre-exercise Measurement", state="normal",
-                                      fg_color="#28a745", hover_color="#218838")
+                                      fg_color="#28a745", hover_color="#218838", command=self.start_next_phase)
         self.status_label.configure(text="Ready to start measurement")
 
     def exit_application(self):
