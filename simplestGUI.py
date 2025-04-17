@@ -5,7 +5,7 @@ import customtkinter as ctk
 import time
 import pygame
 import threading
-from heartBeats import PulseSensorReader
+from heartBeats_new import PulseSensorReader
 
 class HeartRateMonitor:
     def __init__(self):
