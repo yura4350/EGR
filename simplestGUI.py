@@ -195,6 +195,10 @@ class HeartRateMonitor:
             # Simulated heart rate: slightly lower range after exercise if in after phase.
             self.current_heart_rate = int(self.sensor.bpm)
             
+            # Printing the current heart rate for debugging
+            print(self.current_heart_rate)
+            
+            # Update the heart rate value and append to readings
             self.heart_rate_readings.append(self.current_heart_rate)
             self.heart_rate_value.configure(text=f"{self.current_heart_rate}")
             
@@ -224,8 +228,8 @@ class HeartRateMonitor:
             self.before_activity_avg = avg_heart_rate
             self.before_avg_value.configure(text=f"{int(avg_heart_rate)}")
             self.current_phase = "between"
-            self.status_label.configure(text="Pre-exercise measurement complete. Click the button to play calming music.")
-            self.measure_button.configure(text="Play Music", state="normal", fg_color="#17a2b8", hover_color="#138496")
+            self.status_label.configure(text="Pre-exercise measurement complete. Click the button to play mindfulness exercises.")
+            self.measure_button.configure(text="Play Mindfulness Exercises", state="normal", fg_color="#17a2b8", hover_color="#138496")
         elif self.current_phase == "after":
             # Save post-exercise average and display the difference.
             self.after_activity_avg = avg_heart_rate
@@ -249,11 +253,11 @@ class HeartRateMonitor:
             pygame.mixer.music.load("roar.mp3")
             pygame.mixer.music.set_volume(1.0)
             pygame.mixer.music.play()
-            self.status_label.configure(text="Playing calming music...")
+            self.status_label.configure(text="Playing midfulness exercises...")
             self.measure_button.configure(state="disabled")
             self.check_music_status()  # Start checking for when music finishes.
         except Exception as e:
-            self.status_label.configure(text=f"Error playing music: {e}")
+            self.status_label.configure(text=f"Error playing mindfulness exercises: {e}")
 
     def check_music_status(self):
         if pygame.mixer.music.get_busy():
@@ -261,7 +265,7 @@ class HeartRateMonitor:
         else:
             # Music has finished; update button for post-exercise measurement.
             self.current_phase = "after"
-            self.status_label.configure(text="Music finished. Click the button to start post-exercise measurement.")
+            self.status_label.configure(text="Mindfulness exercises are finished. Click the button to start post-exercise measurement.")
             self.measure_button.configure(text="Start Post-exercise Measurement", state="normal",
                                           command=self.start_next_phase,
                                           fg_color="#28a745", hover_color="#218838")
