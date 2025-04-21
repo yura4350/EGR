@@ -37,7 +37,7 @@ class HeartRateMonitor:
         self.after_activity_avg = None
         
         # Workflow state:
-        # "ready"     : Not started yet; button to start pre-exercise measurement.
+        # "ready"     : Not started yet ; button to start pre-exercise measurement.
         # "before"    : Currently doing pre-exercise measurement.
         # "between"   : Pre-exercise complete; waiting for music to be played.
         # "after"     : Ready for post-exercise measurement.
@@ -214,7 +214,7 @@ class HeartRateMonitor:
             if elapsed_time >= self.measuring_duration:
                 self.complete_measurement()
             else:
-                self.update_timer = self.root.after(1000, self.update_heart_rate)
+                self.update_timer = self.root.after(200, self.update_heart_rate)
 
     def complete_measurement(self):
         self.is_measuring = False
